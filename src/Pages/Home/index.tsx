@@ -17,6 +17,7 @@ interface ICard {
 export default function Home() {
   const [filterActived, setFilterActived] = useState("today");
   const [tasks, setTasks] = useState([]);
+  const [lateCount, setLateCount] = useState(0);
 
   async function loadTasks() {
     await api.get(`task/filter/${filterActived}/11:11:11:11:11:11`)
@@ -25,14 +26,26 @@ export default function Home() {
       })
   }
 
+  async function lateVerify() {
+    await api.get(`task/filter/late/11:11:11:11:11:11`)
+      .then(response => {
+        setLateCount(response.data.length);
+      })
+  }
+
   useEffect(() => {
     loadTasks();
+    lateVerify();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterActived])
+  }, [filterActived]);
+
+  function Notification() {
+    setFilterActived("late");
+  }
 
   return (
     <Container>
-      <Header />
+      <Header lateCount={lateCount} clickNotification={Notification} />
       <FilterArea>
         <button type="button" onClick={() => setFilterActived("all")}>
           <FilterCard title="Todos" active={filterActived === 'all'} />
@@ -52,7 +65,7 @@ export default function Home() {
       </FilterArea>
 
       <Title>
-        <h3>Tarefas</h3>
+        <h3>{filterActived === 'late' ? 'TAREFAS ATRASADAS' : 'TAREFAS'}</h3>
       </Title>
 
       <Content>

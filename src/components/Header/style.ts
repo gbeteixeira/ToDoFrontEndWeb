@@ -30,7 +30,7 @@ export const RightSide = styled.div`
   align-items: center;
   justify-content: flex-end;
 
-  a{
+  a, button{
     color: ${theme.colors.text};
     font-weight: bold;
     text-decoration: none;
@@ -42,6 +42,10 @@ export const RightSide = styled.div`
   }
 
   #notification{
+    cursor: pointer;
+    background: none;
+    border: none;
+
     img{
       width: 25px;
       height: 30px;
