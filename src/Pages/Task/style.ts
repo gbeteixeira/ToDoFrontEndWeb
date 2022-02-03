@@ -55,10 +55,18 @@ export const Input = styled.div`
     padding: 15px;
     border: none;
     border-bottom: 1px solid ${theme.colors.primary};
+  }
 
-    &::-webkit-calendar-picker-indicator {
-      display: none;
-    }
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    color: transparent;
+    background: none;
+    z-index: 1;
+  }
+
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    color: transparent;
+    background: none;
+    z-index: 1;
   }
 
   img{

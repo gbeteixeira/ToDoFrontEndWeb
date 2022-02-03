@@ -70,4 +70,10 @@ export const RightSide = styled.div`
      margin: 0 10px;
      color: ${theme.colors.text};
   }
+
+  button{
+    font-size: 16px;
+    background: none;
+    border: none;
+  }
 `;

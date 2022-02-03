@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { theme } from '../../theme';
 
+interface IDone {
+  done: boolean;
+}
+
 export const Container = styled.div`
   width: 300px;
   height: 220px;
@@ -14,6 +18,7 @@ export const Container = styled.div`
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  opacity: ${(props: IDone) => props.done ? 0.7 : 1};
 
   &:hover{
     opacity: 0.5;

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { Container, FilterArea, Content, Title } from './style';
 
 import api from '../../services/api';
+import isConnected from '../../utils/isConnected';
 
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -9,33 +11,32 @@ import FilterCard from '../../components/FilterCard';
 import TaskCard from '../../components/TaskCard';
 
 interface ICard {
+  id: String,
   type: Number,
   title: String,
   when: String,
+  done: boolean,
 }
 
 export default function Home() {
   const [filterActived, setFilterActived] = useState("today");
   const [tasks, setTasks] = useState([]);
-  const [lateCount, setLateCount] = useState(0);
+  const [redirect, setRedirect] = useState(false);
 
   async function loadTasks() {
-    await api.get(`task/filter/${filterActived}/11:11:11:11:11:11`)
+    await api.get(`task/filter/${filterActived}/${isConnected}`)
       .then(response => {
         setTasks(response.data)
       })
   }
 
-  async function lateVerify() {
-    await api.get(`task/filter/late/11:11:11:11:11:11`)
-      .then(response => {
-        setLateCount(response.data.length);
-      })
-  }
+
 
   useEffect(() => {
     loadTasks();
-    lateVerify();
+
+    if (!isConnected)
+      setRedirect(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterActived]);
 
@@ -45,7 +46,9 @@ export default function Home() {
 
   return (
     <Container>
-      <Header lateCount={lateCount} clickNotification={Notification} />
+      {redirect && <Navigate to="/qrcode" />}
+      <Header clickNotification={Notification} />
+
       <FilterArea>
         <button type="button" onClick={() => setFilterActived("all")}>
           <FilterCard title="Todos" active={filterActived === 'all'} />
@@ -71,7 +74,7 @@ export default function Home() {
       <Content>
         {
           tasks.map((task: ICard, index: any) => (
-            <TaskCard key={index} type={task.type} title={task.title} when={task.when} />
+            <Link to={`/task/${task.id}`}><TaskCard key={index} type={task.type} title={task.title} when={task.when} done={task.done} /></Link>
           ))
         }
       </Content>
